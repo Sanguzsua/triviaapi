@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia de todas las categorías</title>
+    <link rel="stylesheet" href="trivia.css">
+</head>
+<body>
+
+    <h1>Juego con Tiempo</h1>
+    
+    <div id="tiempo-container" style="display: none;">
+        <p>Tiempo restante: <span id="tiempo">60</span> segundos</p>
+    </div>
+    
+    
+    
+    <div id="preguntas-container"></div>
+    <div id="resultado-container"></div>
+    <div id="mensaje-container"></div>
+
+    <!-- Nuevo contenedor para preguntas favoritas -->
+    <div id="favoritos-container"></div>
+
+    <!-- Botón para jugar preguntas favoritas -->
+    <button id="btn-favoritos">⭐ Jugar Favoritos</button>
+
+    <button id="btn-terminar" onclick="window.location.href='inicio.html'">🏠 Volver al Inicio</button>
+
+    <script src="trivia.js" defer></script>
+</body>
+</html>

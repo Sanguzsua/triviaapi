@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Trivia</title>
+    <link rel="stylesheet" href="trivia.css">
+</head>
+<body>
+
+    <h1>Juego de Trivia</h1>
+    <div id="busqueda-container">
+        <input type="text" id="busqueda" placeholder="Buscar categoría...">
+        <div id="resultados-busqueda"></div>
+    </div>
+    
+   
+   <!-- Categorías -->
+<div id="categorias">
+    <div class="categoria" onclick="irACategoria(11, 'peliculas.html')">
+        <img src="cine.png" alt="Cine">
+        <button>🎬 Preguntas de Cine</button>
+    </div>
+
+    <div class="categoria" onclick="irACategoria(9, 'cultura.html')">
+        <img src="cultura.png" alt="Cultura General">
+        <button>📚 Cultura General</button>
+    </div>
+
+    <div class="categoria" onclick="irACategoria(21, 'deportes.html')">
+        <img src="deportes.png" alt="Deportes">
+        <button>⚽ Deportes</button>
+    </div>
+
+    <div class="categoria" onclick="irACategoria(17, 'ciencia.html')">
+        <img src="ciencia.png" alt="Ciencia">
+        <button>🔬 Ciencia</button>
+    </div>
+
+    <div class="categoria" onclick="irACategoria(23, 'historia.html')">
+        <img src="historia.png" alt="Historia">
+        <button>🏛️ Historia</button>
+    </div>
+
+
+    <div class="categoria" onclick="window.location.href='juego.html'">
+        <img src="cronometro.png" alt="Juego con Tiempo">
+        <button>🕒 Juego con Tiempo</button>
+    </div>
+</div>
+
+
+    <!-- Botón para jugar con preguntas favoritas -->
+    <button id="jugar" style="display: none;" onclick="window.location.href='favoritas.html'">⭐ Juego con Favoritas</button>
+
+    <!-- Menú inferior -->
+    <footer>
+        <nav class="menu-inferior">
+            <ul>
+                <li><a href="index.html"> 🔑inicio de sesion</a></li>
+                <li><a href="inicio.html">📂 Categorías</a></li>
+                <li><a href="favoritas.html">⭐ Favoritos</a></li>
+                <li><a href="configuracion.html">⚙️ Configuración</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+    <script>
+        function irACategoria(id, pagina) {
+            window.location.href = `${pagina}?categoria=${id}`;
+        }
+    </script>
+        <script src="trivia.js" defer></script>
+
+</body>
+</html>
+
+
+
