@@ -12,6 +12,7 @@ body {
     background-color: #216b70a4;
     padding: 10px;
     line-height: 1.6;
+    color: #000;
 }
 
 body.modo-oscuro {
@@ -46,16 +47,54 @@ button:hover {
 
 @media (max-width: 480px) {
     button {
-        width: 90%; /* Botones adaptables en móvil */
+        width: 90%;
         font-size: 14px;
         padding: 10px;
     }
 }
 
+/* --- Formulario General --- */
+form {
+    max-width: 400px;
+    margin: 40px auto;
+    background: #ffffffcc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+input, select, textarea {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #61b4b9;
+    box-shadow: 0 0 5px rgba(97, 180, 185, 0.8);
+}
+
+body.modo-oscuro form {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+}
+
+body.modo-oscuro input,
+body.modo-oscuro select,
+body.modo-oscuro textarea {
+    background-color: #2a2a2a;
+    color: #fff;
+    border: 1px solid #444;
+}
+
 /* --- Contenedor de Preguntas --- */
 #preguntas-container {
     background: rgba(28, 95, 150, 0.692);
-    width: 90%; /* Se ajusta en móvil */
+    width: 90%;
     max-width: 500px;
     margin: 20px auto;
     padding: 20px;
@@ -63,7 +102,7 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* --- Modal (Formulario de Edición) --- */
+/* --- Modal --- */
 .modal {
     position: fixed;
     top: 10%;
@@ -93,7 +132,7 @@ body.modo-oscuro .modal {
 footer {
     background-color: #0e3335;
     padding: 10px 0;
-    position: relative; /* Cambia de fixed a relative */
+    position: relative;
     bottom: 0;
     left: 0;
     right: 0;
@@ -116,7 +155,7 @@ footer a:hover {
     color: #61b4b9;
 }
 
-/* --- Categorías Responsivas --- */
+/* --- Categorías --- */
 .categoria {
     display: flex;
     flex-direction: column;
@@ -126,10 +165,31 @@ footer a:hover {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    width: 100%; /* Ocupa todo el ancho en móviles */
-    max-width: 300px; /* Se ajusta en pantallas grandes */
+    width: 100%;
+    max-width: 300px;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.categoria:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.categoria img {
+    display: block;
+    max-width: 90%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.categoria:last-child {
+    margin-bottom: 0;
+}
+
 body.modo-oscuro .categoria {
     background: #2a2a2a;
     color: #f1f1f1;
@@ -137,6 +197,22 @@ body.modo-oscuro .categoria {
 
 body.modo-oscuro .categoria img {
     border: 1px solid #444;
+}
+
+@media (max-width: 480px) {
+    .categoria {
+        width: 100%;
+        margin: 10px 0;
+    }
+}
+
+/* --- Contenedor de Categorías --- */
+#categorias {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 50px;
 }
 
 /* --- Notificaciones --- */
@@ -163,45 +239,10 @@ body.modo-oscuro .categoria img {
 .notificacion.info {
     background-color: #2196f3;
 }
-/* Ajustes para las imágenes de las categorías */
-.categoria img {
-    display: block; /* Centra la imagen */
-    max-width: 90%; /* Se ajusta al ancho del contenedor */
-    height: auto; /* Mantiene la proporción original */
-    margin: 0 auto; /* Centra la imagen dentro del contenedor */
-    border-radius: 10px; /* Bordes redondeados */
-    object-fit: cover; /* Asegura que se vea bien dentro del espacio disponible */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Añade profundidad visual */
-}
 
-
-.categoria:last-child {
-    margin-bottom: 0; /* Soluciona el problema de espaciado para el último elemento */
-}
-
-.categoria:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Agrega más profundidad visual */
-}
-
-
-
-@media (max-width: 480px) {
-    .categoria {
-        width: 100%; /* Ocupa toda la fila en móvil */
-        margin: 10px 0; /* Espaciado vertical entre categorías */
-    }
-}
-
-#categorias {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 50px; /* Agrega un margen para evitar que el último div quede oculto */
-}
-
+/* --- HTML & Body Scroll Fix --- */
 html, body {
     height: 100%;
-    overflow-y: auto; /* Permite el desplazamiento */
+    overflow-y: auto;
 }
+
