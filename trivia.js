@@ -1,273 +1,155 @@
-document.addEventListener("DOMContentLoaded", function () {
-    if (!document.getElementById("tiempo-container")) {
-        const tiempoContainer = document.createElement("div");
-        tiempoContainer.id = "tiempo-container";
-        tiempoContainer.style.display = "none";
-        const preguntasContainer = document.getElementById("preguntas-container");
-        if (preguntasContainer && preguntasContainer.parentNode) {
-            preguntasContainer.parentNode.insertBefore(tiempoContainer, preguntasContainer);
-        } else {
-            document.body.appendChild(tiempoContainer);
-        }
-    }
+// trivia.js completo con: editar, eliminar, buscador y temporizador funcionando
 
-    let categoria = "";
+// Esperar a que cargue el DOM
+window.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
-    categoria = urlParams.get("categoria");
-    const esTiempoLimite = urlParams.get("modo") === "tiempo";
-    const esPaginaFavoritos = window.location.href.includes("favoritas.html");
-
-    if (!categoria && document.getElementById("preguntas-container") && !esPaginaFavoritos) {
-        console.error("No se detectó categoría.");
-        return;
+    const categoria = urlParams.get("categoria");
+    const esModoTiempo = urlParams.get("modo") === "tiempo";
+    const esFavoritos = window.location.href.includes("favoritas.html");
+  
+    // Configurar modo oscuro si está activado
+    if (localStorage.getItem("modoOscuro") === "true") {
+      document.body.classList.add("modo-oscuro");
     }
-
-    if (esTiempoLimite) {
-        let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-        if (favoritos.length === 0) {
-            alert("No tienes preguntas favoritas para jugar con tiempo. Primero agrega algunas.");
-            window.location.href = "index.html";
-            return;
-        }
-        iniciarTrivia(favoritos, true);
-    } else if (categoria) {
-        let preguntasGuardadas = localStorage.getItem(`preguntas_${categoria}`);
-        if (preguntasGuardadas) {
-            iniciarTrivia(JSON.parse(preguntasGuardadas), false);
-        } else {
-            fetch(`https://opentdb.com/api.php?amount=10&category=${categoria}&type=multiple`)
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.results || data.results.length === 0) throw new Error("No se recibieron preguntas.");
-                    localStorage.setItem(`preguntas_${categoria}`, JSON.stringify(data.results));
-                    iniciarTrivia(data.results, false);
-                })
-                .catch(error => console.error("Error al obtener preguntas:", error));
-        }
+    const chkOscuro = document.getElementById("modoOscuro");
+    if (chkOscuro) {
+      chkOscuro.checked = document.body.classList.contains("modo-oscuro");
+      chkOscuro.addEventListener("change", () => {
+        document.body.classList.toggle("modo-oscuro", chkOscuro.checked);
+        localStorage.setItem("modoOscuro", chkOscuro.checked);
+      });
     }
-
-    cargarFavoritos();
-    configurarModoOscuro();
-});
-
-function mostrarNotificacionConBotones(mensaje, opciones, callback) {
-    const notificacion = document.createElement("div");
-    notificacion.className = "notificacion interactiva";
-    notificacion.innerHTML = `
-        <p>${mensaje}</p>
-        <div>
-            ${opciones.map(opcion => `<button class="notificacion-boton">${opcion}</button>`).join("")}
-        </div>
-    `;
-    document.body.appendChild(notificacion);
-
-    const botones = notificacion.querySelectorAll(".notificacion-boton");
-    botones.forEach((boton, index) => {
-        boton.addEventListener("click", () => {
-            callback(index);
-            document.body.removeChild(notificacion);
+  
+    // --- Buscador de categorías ---
+    const inputBusqueda = document.getElementById("busqueda");
+    const resultadosBusqueda = document.getElementById("resultados-busqueda");
+    if (inputBusqueda && resultadosBusqueda) {
+      const categorias = [
+        { nombre: "Películas", id: "11", url: "peliculas.html" },
+        { nombre: "Cultura", id: "9", url: "cultura.html" },
+        { nombre: "Ciencia", id: "17", url: "ciencia.html" },
+        { nombre: "Historia", id: "23", url: "historia.html" },
+        { nombre: "Deportes", id: "21", url: "deportes.html" }
+      ];
+      inputBusqueda.addEventListener("input", () => {
+        const query = inputBusqueda.value.toLowerCase();
+        resultadosBusqueda.innerHTML = "";
+        const filtradas = categorias.filter(cat => cat.nombre.toLowerCase().includes(query));
+        filtradas.forEach(cat => {
+          const div = document.createElement("div");
+          div.innerHTML = `<a href="${cat.url}?categoria=${cat.id}">${cat.nombre}</a>`;
+          resultadosBusqueda.appendChild(div);
         });
-    });
-}
-
-function agregarEventoBoton(idBoton, esTiempoLimite) {
-    const boton = document.getElementById(idBoton);
-    if (boton) {
-        boton.addEventListener("click", () => {
-            let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-            if (favoritos.length === 0) {
-                mostrarNotificacion(`No tienes preguntas favoritas${esTiempoLimite ? " para jugar con tiempo" : ""}.`, "info");
-                return;
-            }
-
-            if (!esTiempoLimite) {
-                const jugarConTiempo = confirm("¿Quieres jugar con tiempo límite?");
-                iniciarTrivia(favoritos, jugarConTiempo);
-            } else {
-                mostrarNotificacion("Modo tiempo activado. ¡Prepárate para jugar!", "info");
-                iniciarTrivia(favoritos, true);
-            }
-        });
+      });
     }
-}
-
-agregarEventoBoton("btn-favoritos", false);
-agregarEventoBoton("btn-tiempo", true);
-
-let indicePregunta = 0;
-let preguntas = [];
-let respuestasCorrectas = 0;
-let temporizador;
-let tiempoRestante;
-let modoTiempoActivo = false;
-
-function iniciarTrivia(preguntasAPI, esTiempoLimite) {
-    preguntas = preguntasAPI.map(p => ({ ...p, incorrect_answers: p.incorrect_answers || [] }));
-    indicePregunta = 0;
-    respuestasCorrectas = 0;
-    tiempoRestante = 60;
-    modoTiempoActivo = esTiempoLimite;
-
-    if (temporizador) clearInterval(temporizador);
-
-    const tiempoContainer = document.getElementById("tiempo-container");
-    if (tiempoContainer) tiempoContainer.style.display = esTiempoLimite ? "block" : "none";
-
-    if (esTiempoLimite) iniciarTemporizador();
-
-    mostrarPregunta();
-}
-
-function iniciarTemporizador() {
-    const tiempoContainer = document.getElementById("tiempo-container");
-    if (!tiempoContainer) return;
-
-    tiempoContainer.innerHTML = `<p>Tiempo restante: <span id="tiempo">${tiempoRestante}</span> segundos</p>`;
-
-    if (temporizador) clearInterval(temporizador);
-
-    temporizador = setInterval(() => {
-        tiempoRestante--;
-        const tiempoElement = document.getElementById("tiempo");
-        if (tiempoElement) tiempoElement.textContent = tiempoRestante;
-
-        if (tiempoRestante <= 0) {
-            clearInterval(temporizador);
-            mostrarResultadoFinal();
+  
+    // --- Trivia con preguntas (API o favoritos) ---
+    if (document.getElementById("preguntas-container")) {
+      if (esModoTiempo) {
+        const favs = JSON.parse(localStorage.getItem("favoritos")) || [];
+        if (favs.length === 0) return alert("Agrega preguntas favoritas para jugar con tiempo.");
+        iniciarTrivia(favs, true);
+      } else if (categoria) {
+        fetch(`https://opentdb.com/api.php?amount=10&category=${categoria}&type=multiple`)
+          .then(res => res.json())
+          .then(data => iniciarTrivia(data.results, false));
+      } else if (esFavoritos) {
+        mostrarFavoritos();
+      }
+    }
+  
+    // --- Funciones Trivia ---
+    let preguntas = [], index = 0, correctas = 0, timer, tiempo = 60;
+  
+    function iniciarTrivia(pregs, modoTiempo) {
+      preguntas = pregs;
+      index = 0;
+      correctas = 0;
+      if (modoTiempo) iniciarTemporizador();
+      mostrarPregunta();
+    }
+  
+    function iniciarTemporizador() {
+      const divTiempo = document.getElementById("tiempo-container");
+      if (divTiempo) divTiempo.style.display = "block";
+      document.getElementById("tiempo").textContent = tiempo;
+      timer = setInterval(() => {
+        tiempo--;
+        document.getElementById("tiempo").textContent = tiempo;
+        if (tiempo <= 0) {
+          clearInterval(timer);
+          mostrarResultado();
         }
-    }, 1000);
-}
-
-function mostrarPregunta() {
-    const contenedor = document.getElementById("preguntas-container");
-    if (!contenedor) return;
-
-    contenedor.innerHTML = "";
-
-    if (indicePregunta >= preguntas.length) {
-        if (temporizador) clearInterval(temporizador);
-        mostrarResultadoFinal();
-        return;
+      }, 1000);
     }
-
-    const pregunta = preguntas[indicePregunta];
-    const respuestas = [...pregunta.incorrect_answers, pregunta.correct_answer].sort(() => Math.random() - 0.5);
-
-    const divPregunta = document.createElement("div");
-    divPregunta.innerHTML = `
-        <p><strong>Pregunta ${indicePregunta + 1}:</strong> ${pregunta.question}</p>
-        <ul>${respuestas.map(r => `<li><button class="respuesta">${r}</button></li>`).join("")}</ul>
-        <button class="favorito">⭐ Agregar a favoritos</button>
-    `;
-    contenedor.appendChild(divPregunta);
-
-    document.querySelectorAll(".respuesta").forEach(btn => {
+  
+    function mostrarPregunta() {
+      const contenedor = document.getElementById("preguntas-container");
+      if (!contenedor || index >= preguntas.length) return mostrarResultado();
+      const pregunta = preguntas[index];
+      const opciones = [...pregunta.incorrect_answers, pregunta.correct_answer].sort(() => Math.random() - 0.5);
+      contenedor.innerHTML = `
+        <p><strong>${pregunta.question}</strong></p>
+        ${opciones.map(op => `<button class='opcion'>${op}</button>`).join("")}
+        <br><button onclick='agregarAFavoritos(${JSON.stringify(pregunta).replace(/"/g, "&quot;")})'>⭐ Agregar a favoritos</button>
+      `;
+      document.querySelectorAll(".opcion").forEach(btn => {
         btn.addEventListener("click", () => {
-            if (btn.textContent === pregunta.correct_answer) respuestasCorrectas++;
-            indicePregunta++;
-            mostrarPregunta();
+          if (btn.textContent === pregunta.correct_answer) correctas++;
+          index++;
+          mostrarPregunta();
         });
-    });
-
-    document.querySelector(".favorito").addEventListener("click", () => agregarAFavoritos(pregunta));
-}
-
-function mostrarResultadoFinal() {
-    const contenedor = document.getElementById("preguntas-container");
-    if (!contenedor) return;
-
-    if (temporizador) clearInterval(temporizador);
-    contenedor.innerHTML = `<h2>¡Juego terminado!</h2>`;
-
-    const resultadoContainer = document.createElement("div");
-    resultadoContainer.id = "resultado-container";
-    resultadoContainer.innerHTML = `<p>Respondiste correctamente ${respuestasCorrectas} de ${preguntas.length} preguntas.</p>`;
-
-    const botonReiniciar = document.createElement("button");
-    botonReiniciar.textContent = "Volver a jugar";
-    botonReiniciar.addEventListener("click", () => iniciarTrivia(preguntas, modoTiempoActivo));
-
-    resultadoContainer.appendChild(botonReiniciar);
-    contenedor.parentNode.appendChild(resultadoContainer);
-
-    const tiempoContainer = document.getElementById("tiempo-container");
-    if (tiempoContainer) tiempoContainer.style.display = "none";
-}
-
-function agregarAFavoritos(p) {
-    if (!p.incorrect_answers) p.incorrect_answers = [];
-    let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-    if (!favoritos.some(f => f.question === p.question)) {
-        favoritos.push(p);
-        localStorage.setItem("favoritos", JSON.stringify(favoritos));
-        alert("Pregunta agregada a favoritos ⭐");
-    } else {
-        alert("Esta pregunta ya está en favoritos.");
+      });
     }
-}
-
-function cargarFavoritos() {
-    const container = document.getElementById("favoritos-container");
-    if (!container) return;
-    let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-    container.innerHTML = favoritos.length === 0
-        ? "<p>No tienes preguntas favoritas aún.</p>"
-        : favoritos.map((p, i) => `
-            <div class="favorito-item">
-                <p><strong>${p.question}</strong></p>
-                <button onclick="confirmarEliminar(${i})">Eliminar</button>
-                <button onclick="mostrarFormularioEditar(${i})">Editar</button>
-            </div>
-        `).join("");
-}
-
-function confirmarEliminar(index) {
-    if (confirm("¿Estás seguro de eliminar esta pregunta?")) eliminarFavorito(index);
-}
-
-function eliminarFavorito(index) {
-    let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-    if (index >= 0 && index < favoritos.length) {
-        favoritos.splice(index, 1);
-        localStorage.setItem("favoritos", JSON.stringify(favoritos));
-        cargarFavoritos();
-        mostrarNotificacion("Pregunta eliminada", "exito");
-    } else {
-        mostrarNotificacion("Error al eliminar", "error");
+  
+    function mostrarResultado() {
+      clearInterval(timer);
+      const contenedor = document.getElementById("preguntas-container");
+      contenedor.innerHTML = `<h2>Juego terminado</h2><p>Respuestas correctas: ${correctas} de ${preguntas.length}</p>`;
     }
-}
-
-function mostrarFormularioEditar(index) {
-    // Igual que ya lo tienes
-}
-
-function mostrarNotificacion(mensaje, tipo) {
-    const n = document.createElement("div");
-    n.className = `notificacion ${tipo}`;
-    n.textContent = mensaje;
-    document.body.appendChild(n);
-    setTimeout(() => {
-        if (document.body.contains(n)) document.body.removeChild(n);
-    }, 3000);
-}
-
-function configurarModoOscuro() {
-    const body = document.body;
-    const modoOscuroCheckbox = document.getElementById("modoOscuro");
-    const modoOscuroActivo = localStorage.getItem("modoOscuro") === "true";
-    if (modoOscuroActivo) body.classList.add("modo-oscuro");
-    if (modoOscuroCheckbox) {
-        modoOscuroCheckbox.checked = modoOscuroActivo;
-        modoOscuroCheckbox.addEventListener("change", function () {
-            body.classList.toggle("modo-oscuro", this.checked);
-            localStorage.setItem("modoOscuro", this.checked);
-        });
+  
+    // --- CRUD Favoritos ---
+    window.agregarAFavoritos = function(pregunta) {
+      let favs = JSON.parse(localStorage.getItem("favoritos") || "[]");
+      if (!favs.some(p => p.question === pregunta.question)) {
+        favs.push(pregunta);
+        localStorage.setItem("favoritos", JSON.stringify(favs));
+        alert("Agregado a favoritos");
+      }
     }
-}
-
-// ✅ HACEMOS PÚBLICAS LAS FUNCIONES NECESARIAS PARA ELIMINAR
-window.eliminarFavorito = eliminarFavorito;
-window.confirmarEliminar = confirmarEliminar;
+  
+    window.eliminarFavorito = function(i) {
+      let favs = JSON.parse(localStorage.getItem("favoritos") || "[]");
+      favs.splice(i, 1);
+      localStorage.setItem("favoritos", JSON.stringify(favs));
+      mostrarFavoritos();
+    }
+  
+    window.editarFavorito = function(i) {
+      const favs = JSON.parse(localStorage.getItem("favoritos") || "[]");
+      const pregunta = favs[i];
+      const nuevaPregunta = prompt("Editar pregunta:", pregunta.question);
+      if (nuevaPregunta) {
+        favs[i].question = nuevaPregunta;
+        localStorage.setItem("favoritos", JSON.stringify(favs));
+        mostrarFavoritos();
+      }
+    }
+  
+    function mostrarFavoritos() {
+      const contenedor = document.getElementById("favoritos-container");
+      if (!contenedor) return;
+      const favs = JSON.parse(localStorage.getItem("favoritos") || "[]");
+      if (favs.length === 0) return contenedor.innerHTML = "<p>No tienes favoritos</p>";
+      contenedor.innerHTML = favs.map((p, i) => `
+        <div class="favorito-item">
+          <p><strong>${p.question}</strong></p>
+          <button onclick="eliminarFavorito(${i})">❌ Eliminar</button>
+          <button onclick="editarFavorito(${i})">✏️ Editar</button>
+        </div>
+      `).join("");
+    }
+  });
 
 
 
