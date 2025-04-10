@@ -1,3 +1,20 @@
+/* Reset General */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General Body */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #216b70a4;
+    padding: 10px;
+    line-height: 1.6;
+    color: #000;
+}
+
 body.modo-oscuro {
     background-color: #121212;
     color: #f1f1f1;
