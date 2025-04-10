@@ -197,8 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cont.innerHTML = favs.map((f, i) => `
       <div class="favorito-item">
         <p><strong>${f.question}</strong></p>
-        <p><em>✅ Respuesta correcta:</em> ${f.correct_answer}</p>
-        <button onclick="jugarUnaFavorita(${i})">🎮 Jugar</button>
         <button onclick="editarFavorita(${i})">✏️ Editar</button>
         <button onclick="eliminarFavorito(${i})">❌ Eliminar</button>
       </div>
