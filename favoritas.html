@@ -1,31 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Favoritos</title>
-    <link rel="stylesheet" href="trivia.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favoritos</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e1f4f4;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #216b70;
+    }
+
+    #favoritos-container {
+      margin: 20px auto;
+      max-width: 600px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .favorito {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .favorito p {
+      margin-bottom: 5px;
+    }
+
+    .favorito button {
+      background-color: #f44336;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .favorito button:hover {
+      background-color: #c0392b;
+    }
+
+    footer {
+      background-color: #0e3335;
+      padding: 15px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    footer ul {
+      list-style: none;
+      display: flex;
+      justify-content: space-around;
+      margin: 0;
+      padding: 0;
+    }
+
+    footer li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+
+    footer li a:hover {
+      background-color: #ffffff33;
+    }
+
+    @media (max-width: 600px) {
+      #favoritos-container {
+        padding: 15px;
+      }
+
+      footer ul {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Preguntas Favoritas ⭐</h1>
+  <h1>Preguntas Favoritas ⭐</h1>
 
-    <div id="favoritos-container">
-        <p>Cargando preguntas favoritas...</p>
-    </div>
+  <div id="favoritos-container">
+    <p>Cargando preguntas favoritas...</p>
+  </div>
 
-    <footer>
-        <nav class="menu-inferior">
-            <ul>
-                <li><a href="index.html"> 🔑inicio de sesion</a></li>
-                <li><a href="inicio.html">📂 Categorías</a></li>
-                <li><a href="favoritas.html">⭐ Favoritos</a></li>
-                <li><a href="configuracion.html">⚙️ Configuración</a></li>
-            </ul>
-        </nav>
-    </footer>
+  <footer>
+    <nav class="menu-inferior">
+      <ul>
+        <li><a href="index.html">🔑 Inicio de sesión</a></li>
+        <li><a href="inicio.html">📂 Categorías</a></li>
+        <li><a href="favoritas.html">⭐ Favoritos</a></li>
+        <li><a href="configuracion.html">⚙️ Configuración</a></li>
+      </ul>
+    </nav>
+  </footer>
 
-    <script src="trivia.js" defer></script> <!-- Se carga el script principal -->
+  <script src="trivia.js" defer></script>
 </body>
 </html>
 
