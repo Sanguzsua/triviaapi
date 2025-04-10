@@ -8,24 +8,29 @@
 </head>
 <body>
 
-    <h1>Juego con Tiempo</h1>
+    <h1>🎮 Juego de Trivia</h1>
     
+    <!-- Temporizador -->
     <div id="tiempo-container" style="display: none;">
-        <p>Tiempo restante: <span id="tiempo">60</span> segundos</p>
+        <p>⏳ Tiempo restante: <span id="tiempo">60</span> segundos</p>
     </div>
     
-    
-    
-    <div id="preguntas-container"></div>
+    <!-- Contenedor de Preguntas -->
+    <div id="preguntas-container">
+        <p>📌 Las preguntas aparecerán aquí...</p>
+    </div>
+
+    <!-- Resultado de la trivia -->
     <div id="resultado-container"></div>
+
+    <!-- Mensaje adicional (correcto / incorrecto) -->
     <div id="mensaje-container"></div>
 
-    <!-- Nuevo contenedor para preguntas favoritas -->
+    <!-- Preguntas favoritas -->
     <div id="favoritos-container"></div>
 
-    <!-- Botón para jugar preguntas favoritas -->
+    <!-- Botones -->
     <button id="btn-favoritos">⭐ Jugar Favoritos</button>
-
     <button id="btn-terminar" onclick="window.location.href='inicio.html'">🏠 Volver al Inicio</button>
 
     <script src="trivia.js" defer></script>
