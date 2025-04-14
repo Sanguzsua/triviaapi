@@ -27,23 +27,7 @@ function router() {
   }
 }
 
-// Función para eliminar de favoritos
-window.removeFromFavorites = function (encodedQuestion) {
-  const question = JSON.parse(decodeURIComponent(encodedQuestion));
-  let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-  favorites = favorites.filter(q => q.question !== question.question);
-
-  localStorage.setItem('favorites', JSON.stringify(favorites));
-  alert('Pregunta eliminada de favoritos ✅');
-
-  // Volver a renderizar los favoritos sin recargar toda la página
-  if (location.hash === '#favorites') {
-    const app = document.getElementById('app');
-    app.innerHTML = ''; // Limpia el contenedor
-    Favorites(app); // Renderiza de nuevo los favoritos
-  }
-};
 
 // Función para agregar a favoritos y mostrar alerta
 window.addToFavorites = function (question) {

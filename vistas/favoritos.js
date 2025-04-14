@@ -1,7 +1,7 @@
 export function Favorites(container) {
-  // Obtén los favoritos del localStorage
-  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  
+  // Obtén los favoritos del localStorage o un arreglo vacío si no existe
+  let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
   container.innerHTML = '<h2>Favoritos</h2>';
 
   // Si no hay favoritos, muestra un mensaje
@@ -12,21 +12,39 @@ export function Favorites(container) {
 
   // Renderiza cada favorito
   favorites.forEach(q => {
-    const question = document.createElement('div');
-    question.innerHTML = `
-      <p>${q.question}</p>
-      <button class="remove-from-favorites-btn" data-question='${JSON.stringify(q)}'>Eliminar</button>
+    const questionDiv = document.createElement('div');
+    const encodedQuestion = encodeURIComponent(JSON.stringify(q)); // Codificar la pregunta para pasarla a los botones
+
+    // Aseguramos que 'answers' siempre sea un array
+    const answers = Array.isArray(q.answers) ? q.answers : [];
+
+    // Generar el HTML de cada pregunta favorita
+    questionDiv.innerHTML = `
+      <p><strong>${q.question}</strong></p>
+      <ul>
+        ${answers.map(answer => `<li>${answer}</li>`).join('')}
+      </ul>
+      <button class="remove-from-favorites-btn" data-question="${encodedQuestion}">Eliminar</button>
+      <button class="edit-favorite-btn" data-question="${encodedQuestion}">Editar</button>
     `;
-    container.appendChild(question);
+    container.appendChild(questionDiv);
   });
 
-  // Asignar el evento de clic para eliminar de favoritos
-  const removeButtons = document.querySelectorAll('.remove-from-favorites-btn');
-  removeButtons.forEach(button => {
-    button.addEventListener('click', (event) => {
-      const question = JSON.parse(event.target.getAttribute('data-question')); // Obtener la pregunta desde el atributo
-      removeFromFavorites(question); // Llamada a la función de eliminación
-    });
+  // Asignar los eventos de clic para eliminar y editar de favoritos
+  container.addEventListener('click', (event) => {
+    // Eliminar favorito
+    if (event.target.classList.contains('remove-from-favorites-btn')) {
+      const encodedQuestion = event.target.getAttribute('data-question');
+      const question = JSON.parse(decodeURIComponent(encodedQuestion));
+      removeFromFavorites(question);
+    }
+
+    // Editar favorito
+    if (event.target.classList.contains('edit-favorite-btn')) {
+      const encodedQuestion = event.target.getAttribute('data-question');
+      const question = JSON.parse(decodeURIComponent(encodedQuestion));
+      editFavorite(question);
+    }
   });
 }
 
@@ -34,18 +52,84 @@ export function Favorites(container) {
 window.removeFromFavorites = function (question) {
   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-  // Filtra los favoritos para eliminar la pregunta
   favorites = favorites.filter(q => q.question !== question.question);
-
-  // Guarda los nuevos favoritos en localStorage
   localStorage.setItem('favorites', JSON.stringify(favorites));
-  alert('Pregunta eliminada de favoritos ✅');
 
-  // Volver a renderizar los favoritos sin recargar toda la página
+  // Vuelve a renderizar
   if (location.hash === '#favorites') {
     const app = document.getElementById('app');
-    app.innerHTML = ''; // Limpia el contenedor
-    Favorites(app); // Renderiza de nuevo los favoritos
+    app.innerHTML = '';
+    Favorites(app);
   }
 };
 
+// Función para agregar a favoritos
+window.addToFavorites = function (question) {
+  let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+  const exists = favorites.some(q => q.question === question.question);
+
+  if (!exists) {
+    favorites.push(question);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    alert('Pregunta añadida a favoritos ✅');
+  } else {
+    alert('La pregunta ya está en favoritos ❗');
+  }
+
+  if (location.hash === '#favorites') {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
+    Favorites(app);
+  }
+};
+
+// Función para editar favorito directamente en pantalla
+window.editFavorite = function (question) {
+  const app = document.getElementById('app');
+  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+  // Encuentra el div donde está esa pregunta
+  const allDivs = Array.from(app.querySelectorAll('div'));
+  const questionDiv = allDivs.find(div => div.textContent.includes(question.question));
+
+  if (!questionDiv) return;
+
+  questionDiv.innerHTML = `
+  <label>Pregunta:</label>
+  <input type="text" id="edit-question" value="${question.question}" style="width: 100%; margin-bottom: 8px;" />
+  
+  <label>Respuestas (separadas por coma):</label>
+  <input type="text" id="edit-answers" value="${(Array.isArray(question.answers) ? question.answers : []).join(', ')}" style="width: 100%; margin-bottom: 8px;" />
+  
+  <button id="save-edit">Guardar ✅</button>
+  <button id="cancel-edit">Cancelar ❌</button>
+`;
+
+
+  // Guardar cambios
+  questionDiv.querySelector('#save-edit').addEventListener('click', () => {
+    const newQuestion = questionDiv.querySelector('#edit-question').value.trim();
+    const newAnswersRaw = questionDiv.querySelector('#edit-answers').value.trim();
+    const newAnswers = newAnswersRaw.split(',').map(ans => ans.trim());
+
+    if (!newQuestion || newAnswers.length === 0) {
+      alert('Por favor ingresa una pregunta y al menos una respuesta.');
+      return;
+    }
+
+    const updatedFavorites = favorites.map(q =>
+      q.question === question.question
+        ? { ...q, question: newQuestion, answers: newAnswers }
+        : q
+    );
+
+    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    Favorites(app); // vuelve a renderizar
+  });
+
+  // Cancelar edición
+  questionDiv.querySelector('#cancel-edit').addEventListener('click', () => {
+    Favorites(app);
+  });
+};
