@@ -1,18 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // MODO OSCURO
-    const modoOscuro = localStorage.getItem("modoOscuro") === "true";
-    if (modoOscuro) document.body.classList.add("modo-oscuro");
-  
-    const checkbox = document.getElementById("modoOscuro");
-    if (checkbox) {
-      checkbox.checked = modoOscuro;
-      checkbox.addEventListener("change", () => {
-        document.body.classList.toggle("modo-oscuro");
-        localStorage.setItem("modoOscuro", checkbox.checked);
-      });
-    }
-  
-    // CONFIGURAR JUEGO
+// CONFIGURAR JUEGO
     const params = new URLSearchParams(window.location.search);
     const categoria = params.get("categoria");
     const modo = params.get("modo");
