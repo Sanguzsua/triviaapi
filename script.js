@@ -4,6 +4,7 @@ import { Favorites } from './vistas/favoritos.js';
 import { Search } from './vistas/buscador.js';
 import { Filter } from './vistas/filtro.js';
 import { info } from './vistas/informacion.js';
+import { TriviaConTiempo } from './vistas/triviacontiempo.js';
 
 const app = document.getElementById('app');
 
@@ -13,7 +14,8 @@ const routes = {
   favorites: Favorites,
   search: Search,
   filter: Filter,
-  info: info
+  info: info,
+  triviaTiempo: TriviaConTiempo
 };
 
 function router() {
