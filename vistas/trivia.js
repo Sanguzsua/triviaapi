@@ -1,10 +1,10 @@
 export function Quiz(container) {
-  container.innerHTML = '<h2>Trivia - Cargando preguntas...</h2>';
+  container.innerHTML = '<h2>Preguntas- Cargando preguntas...</h2>';
 
   fetch('https://opentdb.com/api.php?amount=5&type=multiple')
     .then(response => response.json())
     .then(data => {
-      container.innerHTML = '<h2>Trivia</h2>';
+      container.innerHTML = '<h2>Preguntas</h2>';
       data.results.forEach((q, i) => {
         const question = document.createElement('div');
         question.innerHTML = `

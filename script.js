@@ -1,4 +1,4 @@
-import { Home } from './vistas/categorias.js';
+import { Home } from './vistas/home.js';
 import { Quiz } from './vistas/trivia.js';
 import { Favorites } from './vistas/favoritos.js';
 import { Search } from './vistas/buscador.js';
@@ -31,6 +31,7 @@ function router() {
 
 
 
+
 // Función para agregar a favoritos y mostrar alerta
 window.addToFavorites = function (question) {
   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -47,6 +48,8 @@ window.addToFavorites = function (question) {
   }
 };
 
-
 window.addEventListener('hashchange', router);
 window.addEventListener('load', router);
+
+
+
