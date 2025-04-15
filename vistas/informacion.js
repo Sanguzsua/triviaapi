@@ -50,7 +50,7 @@ export function info(container) {
 
         <!-- Estos en negro -->
         <p style="font-size: 1em; color: black;">GitHub: 
-          <a href="https://github.com/SantiagoGS07" target="_blank" style="color: black;">@SantiagoGS07</a>
+          <a href="https://github.com/Sanguzsua" target="_blank" style="color: black;">@Sanguzsua</a>
         </p>
 
         <p style="font-size: 1em; color: black;">Versión de la app: <strong>V.1.0.0</strong></p>
