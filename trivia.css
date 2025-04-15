@@ -1,45 +1,80 @@
+/* Estilo base */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-  }
-  
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #468ffcbe;
+}
+
+#top-menu, #bottom-menu {
+  background-color: #33924b;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; /* permite que los elementos bajen si no caben */
+  padding: 10px;
+}
+
+#top-menu a, #bottom-menu a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+#app {
+  padding: 20px;
+  background-color: #468ffcbe;
+}
+
+a {
+  text-align: center;
+  display: block; /* hace que ocupe todo el ancho */
+  margin: 5px auto;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #0a330c;
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+/* Estilo responsivo para pantallas pequeñas */
+@media (max-width: 600px) {
   #top-menu, #bottom-menu {
-    background-color: #333;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px;
+    flex-direction: column;
+    align-items: center;
   }
-  
+
   #top-menu a, #bottom-menu a {
-    color: white;
-    text-decoration: none;
-    padding: 10px;
+    padding: 8px;
+    font-size: 1.1rem;
   }
-  
-  #app {
-    padding: 20px;
-    background-color: white;
-  }
-  
-  a {
-    text-align: center;
-  }
-  
+
   button {
-    background-color: #4CAF50;
-    color: white;
+    width: 90%;
+    max-width: 300px;
+    margin: 10px auto;
+    display: block;
+  }
+
+  #app {
     padding: 10px;
-    border: none;
-    cursor: pointer;
   }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
+
   h2 {
-    text-align: center;
+    font-size: 1.5rem;
   }
-  
+}
