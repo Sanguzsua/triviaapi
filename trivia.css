@@ -1,80 +1,92 @@
 /* Estilo base */
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #468ffcbe;
+  font-family: Arial, sans-serif; /* Define la fuente de texto como Arial, con una alternativa sans-serif */
+  margin: 0; /* Elimina el margen por defecto */
+  padding: 0; /* Elimina el padding por defecto */
+  background-color: #468ffcbe; /* Establece un color de fondo azul claro translúcido */
 }
 
+/* Estilos para los menús superior e inferior */
 #top-menu, #bottom-menu {
-  background-color: #33924b;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap; /* permite que los elementos bajen si no caben */
-  padding: 10px;
+  background-color: #33924b; /* Color de fondo verde para los menús */
+  display: flex; /* Usamos flexbox para alinear los elementos */
+  justify-content: space-around; /* Distribuye los elementos a lo largo del eje horizontal */
+  flex-wrap: wrap; /* Permite que los elementos bajen si no caben en la misma línea */
+  padding: 10px; /* Espaciado interno */
 }
 
+/* Estilos para los enlaces dentro de los menús */
 #top-menu a, #bottom-menu a {
-  color: rgb(255, 255, 255);
-  text-decoration: none;
-  padding: 10px;
-  font-size: 1rem;
+  color: rgb(255, 255, 255); /* Color del texto en blanco */
+  text-decoration: none; /* Elimina el subrayado de los enlaces */
+  padding: 10px; /* Espaciado interno de los enlaces */
+  font-size: 1rem; /* Tamaño de la fuente de los enlaces */
 }
 
+/* Estilos para el contenedor principal de la app */
 #app {
-  padding: 20px;
-  background-color: #468ffcbe;
+  padding: 20px; /* Espaciado interno en el contenedor */
+  background-color: #468ffcbe; /* Color de fondo azul claro translúcido */
 }
 
+/* Estilos generales para los enlaces */
 a {
-  text-align: center;
-  display: block; /* hace que ocupe todo el ancho */
-  margin: 5px auto;
+  text-align: center; /* Centra el texto dentro de los enlaces */
+  display: block; /* Hace que los enlaces ocupen todo el ancho disponible */
+  margin: 5px auto; /* Añade un margen arriba y abajo, centrando los enlaces */
 }
 
+/* Estilos para los botones */
 button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 1rem;
+  background-color: #4CAF50; /* Color de fondo verde para el botón */
+  color: white; /* Color del texto en blanco */
+  padding: 10px 20px; /* Espaciado interno del botón */
+  border: none; /* Elimina el borde del botón */
+  cursor: pointer; /* Muestra un cursor tipo puntero cuando se pasa por encima */
+  border-radius: 5px; /* Redondea los bordes del botón */
+  font-size: 1rem; /* Tamaño de la fuente dentro del botón */
 }
 
+/* Efecto de hover en los botones */
 button:hover {
-  background-color: #0a330c;
+  background-color: #0a330c; /* Cambia el color de fondo cuando se pasa el mouse sobre el botón */
 }
 
+/* Estilos para los encabezados de nivel 2 (h2) */
 h2 {
-  text-align: center;
-  font-size: 1.8rem;
+  text-align: center; /* Centra el texto de los encabezados */
+  font-size: 1.8rem; /* Tamaño de la fuente para los encabezados */
 }
 
-/* Estilo responsivo para pantallas pequeñas */
+/* Estilo responsivo para pantallas pequeñas (máximo 600px de ancho) */
 @media (max-width: 600px) {
+  /* Ajustes para los menús cuando la pantalla es pequeña */
   #top-menu, #bottom-menu {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: column; /* Coloca los elementos en una columna */
+    align-items: center; /* Centra los elementos en el eje transversal */
   }
 
+  /* Ajustes para los enlaces dentro de los menús en pantallas pequeñas */
   #top-menu a, #bottom-menu a {
-    padding: 8px;
-    font-size: 1.1rem;
+    padding: 8px; /* Reduce el padding de los enlaces */
+    font-size: 1.1rem; /* Aumenta ligeramente el tamaño de la fuente */
   }
 
+  /* Ajustes para los botones en pantallas pequeñas */
   button {
-    width: 90%;
-    max-width: 300px;
-    margin: 10px auto;
-    display: block;
+    width: 90%; /* Hace que los botones ocupen el 90% del ancho disponible */
+    max-width: 300px; /* Establece un ancho máximo para los botones */
+    margin: 10px auto; /* Añade margen arriba y abajo y los centra */
+    display: block; /* Hace que el botón ocupe todo el ancho disponible */
   }
 
+  /* Ajustes para el contenedor principal de la app en pantallas pequeñas */
   #app {
-    padding: 10px;
+    padding: 10px; /* Reduce el padding del contenedor */
   }
 
+  /* Ajustes para los encabezados en pantallas pequeñas */
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Reduce el tamaño de la fuente del encabezado */
   }
 }
