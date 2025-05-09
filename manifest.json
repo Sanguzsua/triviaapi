@@ -1,0 +1,21 @@
+{
+  "name": "TriviaAPI",
+  "short_name": "Trivia",
+  "description": "Una app para responder preguntas de trivia",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#008080",
+  "icons": [
+    {
+      "src": "imagenes/icono.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "imagenes/splash.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
