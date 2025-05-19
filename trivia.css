@@ -1,92 +1,129 @@
-/* Estilo base */
+/* ===== Estilo base ===== */
 body {
-  font-family: Arial, sans-serif; /* Define la fuente de texto como Arial, con una alternativa sans-serif */
-  margin: 0; /* Elimina el margen por defecto */
-  padding: 0; /* Elimina el padding por defecto */
-  background-color: #468ffcbe; /* Establece un color de fondo azul claro translúcido */
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Estilos para los menús superior e inferior */
-#top-menu, #bottom-menu {
-  background-color: #33924b; /* Color de fondo verde para los menús */
-  display: flex; /* Usamos flexbox para alinear los elementos */
-  justify-content: space-around; /* Distribuye los elementos a lo largo del eje horizontal */
-  flex-wrap: wrap; /* Permite que los elementos bajen si no caben en la misma línea */
-  padding: 10px; /* Espaciado interno */
+/* ===== Menú inferior fijo ===== */
+#bottom-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #2c2c2c;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  z-index: 1000;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.6);
+  border-top: 1px solid #444;
+  overflow-x: auto;
 }
 
-/* Estilos para los enlaces dentro de los menús */
-#top-menu a, #bottom-menu a {
-  color: rgb(255, 255, 255); /* Color del texto en blanco */
-  text-decoration: none; /* Elimina el subrayado de los enlaces */
-  padding: 10px; /* Espaciado interno de los enlaces */
-  font-size: 1rem; /* Tamaño de la fuente de los enlaces */
+/* ===== Menú superior (opcional) ===== */
+#top-menu {
+  background-color: #000000;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+  overflow-x: auto;
 }
 
-/* Estilos para el contenedor principal de la app */
+/* ===== Enlaces de los menús ===== */
+#top-menu a,
+#bottom-menu a {
+  color: #FF4F81; /* rojo magenta suave */
+  text-decoration: none;
+  padding: 8px 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+#top-menu a:hover,
+#bottom-menu a:hover {
+  background-color: rgba(255, 79, 129, 0.15);
+}
+
+/* ===== Contenido principal ===== */
 #app {
-  padding: 20px; /* Espaciado interno en el contenedor */
-  background-color: #468ffcbe; /* Color de fondo azul claro translúcido */
+  flex: 1;
+  padding: 20px 16px 80px; /* espacio para el menú inferior */
+  background-color: #2b0a0a; /* vino suave más apagado */
 }
 
-/* Estilos generales para los enlaces */
-a {
-  text-align: center; /* Centra el texto dentro de los enlaces */
-  display: block; /* Hace que los enlaces ocupen todo el ancho disponible */
-  margin: 5px auto; /* Añade un margen arriba y abajo, centrando los enlaces */
-}
-
-/* Estilos para los botones */
+/* ===== Botones con acento rojo suave ===== */
 button {
-  background-color: #4CAF50; /* Color de fondo verde para el botón */
-  color: white; /* Color del texto en blanco */
-  padding: 10px 20px; /* Espaciado interno del botón */
-  border: none; /* Elimina el borde del botón */
-  cursor: pointer; /* Muestra un cursor tipo puntero cuando se pasa por encima */
-  border-radius: 5px; /* Redondea los bordes del botón */
-  font-size: 1rem; /* Tamaño de la fuente dentro del botón */
+  background-color: #000000;
+  color: #FF4F81;
+  padding: 12px 20px;
+  border: 2px solid #FF4F81;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+  margin: 15px auto;
+  display: block;
+  box-shadow: 0 0 10px rgba(255, 79, 129, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Efecto de hover en los botones */
 button:hover {
-  background-color: #0a330c; /* Cambia el color de fondo cuando se pasa el mouse sobre el botón */
+  background-color: #000000;
+  transform: scale(1.05);
 }
 
-/* Estilos para los encabezados de nivel 2 (h2) */
+/* ===== Enlaces generales ===== */
+a {
+  display: block;
+  margin: 8px auto;
+  text-align: center;
+  color: #FF4F81;
+  font-weight: bold;
+}
+
+/* ===== Encabezados ===== */
 h2 {
-  text-align: center; /* Centra el texto de los encabezados */
-  font-size: 1.8rem; /* Tamaño de la fuente para los encabezados */
+  text-align: center;
+  font-size: 1.8rem;
+  color: #f0f0f0;
+  margin-bottom: 20px;
+  text-shadow: 0 0 6px #FF4F81;
 }
 
-/* Estilo responsivo para pantallas pequeñas (máximo 600px de ancho) */
+/* ===== Responsivo ===== */
 @media (max-width: 600px) {
-  /* Ajustes para los menús cuando la pantalla es pequeña */
-  #top-menu, #bottom-menu {
-    flex-direction: column; /* Coloca los elementos en una columna */
-    align-items: center; /* Centra los elementos en el eje transversal */
+  #top-menu,
+  #bottom-menu {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 4px;
   }
 
-  /* Ajustes para los enlaces dentro de los menús en pantallas pequeñas */
-  #top-menu a, #bottom-menu a {
-    padding: 8px; /* Reduce el padding de los enlaces */
-    font-size: 1.1rem; /* Aumenta ligeramente el tamaño de la fuente */
+  #top-menu a,
+  #bottom-menu a {
+    font-size: 0.9rem;
+    padding: 10px 6px;
   }
 
-  /* Ajustes para los botones en pantallas pequeñas */
   button {
-    width: 90%; /* Hace que los botones ocupen el 90% del ancho disponible */
-    max-width: 300px; /* Establece un ancho máximo para los botones */
-    margin: 10px auto; /* Añade margen arriba y abajo y los centra */
-    display: block; /* Hace que el botón ocupe todo el ancho disponible */
+    font-size: 1rem;
+    padding: 10px 16px;
   }
 
-  /* Ajustes para el contenedor principal de la app en pantallas pequeñas */
-  #app {
-    padding: 10px; /* Reduce el padding del contenedor */
-  }
-
-  /* Ajustes para los encabezados en pantallas pequeñas */
   h2 {
-    font-size: 1.5rem; /* Reduce el tamaño de la fuente del encabezado */
+    font-size: 1.4rem;
   }
 }
